@@ -5,20 +5,38 @@ local set_millseconds = 0
 
 function main()
 	local input = nil
+	local counter = 0
+	local time_since_start = nil
+	local time_of_last_inc = nil
+	local time_since_last_inc = nil
+
+	local start_time = os.time()
 
 	while true do
-		wait_sec(0.1)
+		wait_sec(0.01)
 		clear()
 		input = get_input_nonblocking()
-		print(input)
 		if input == "a" then
-			set_counter = set_counter + 1
-			print("incrementing")
+			time_of_last_inc = os.time()
+			counter = counter + 1
 		end
-		print("num_sets")
-		print("time elapsed: " .. os.time())
-		print("counter: " .. set_counter)
+
+		time_since_start = os.time() - start_time
+		if time_of_last_inc then
+			time_since_last_inc = os.time() - time_of_last_inc
+		end
+		render_stuff(time_since_start, time_since_last_inc, counter)
+		if input == "q" then
+			print("exiting. press ctrl-c")
+			break
+		end
 	end
+end
+
+function render_stuff(time_since_start, time_since_last_inc, counter)
+	print(string.format("Total training time (s)\t%s", time_since_start))
+	print(string.format("Time since end of last set (s)\t%s", time_since_last_inc))
+	print(string.format("Set count\t%s", counter))
 end
 
 function wait_sec(x)
@@ -37,21 +55,18 @@ function get_input_nonblocking()
 		-- read it line by line
 		state = file_handle:read()
 		io.close(file_handle)
-		print("got state from file. it is " .. tostring(state))
 		if state then
 			-- pop off the final char
 			command = string.sub(state, string.len(state))
 			local new_state = string.sub(state, 1, string.len(state) - 1)
 			assert(string.len(state) == string.len(new_state) + 1)
 			-- write it back
-			print(new_state)
 
 			local new_file_handle = io.open("state", "w")
 			new_file_handle:write(new_state)
 			io.close(new_file_handle)
 		end
 	end
-	print("command is " .. tostring(command))
 	return command
 end
 main()

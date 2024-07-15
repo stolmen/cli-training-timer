@@ -1,11 +1,7 @@
-print("starting input")
 require("common")
 
 local function write_line_to_file(filename, input_char)
-	print("writing line " .. input_char .. " to file " .. filename)
 	local f_handle = io.open(filename, "a")
-	print(filename)
-	print(f_handle)
 	if f_handle == nil then
 		assert(false)
 	else
