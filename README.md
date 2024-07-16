@@ -1,5 +1,12 @@
 # Training timer
 
+Run ./start.sh to start.
+
+## TODO
+
+- [ ] Render nicer output
+- [ ] make graceful exit on q or ctrl-c
+
 ## Requirements
 
 - Single button press to increment set counter
@@ -18,15 +25,3 @@ There will be two processes:
 The input process will do blocking reads from stdin and write this to a file continuously.
 
 The idsplay process will read from this file, process the input, then write to stdout continuously.
-
-hoping i can do something like
-
-lua input.lua & lua display.lua
-
-### Input progress
-
-Run two processes
-
-- redirect stdin to a file
-- in main loop, read from file to get input
-- act on input - display stuff
